@@ -1,0 +1,8 @@
+{
+  "name": "Synthetic Container Runtime",
+  "dockerComposeFile": "../docker-compose.yaml",
+  "service": "console",
+  "workspaceFolder": "/mnt/app",
+  "containerUser": "code",
+  "updateRemoteUserUID": true
+}

@@ -1,2 +1,1 @@
-# SCR
-Synthetic Container Runtime
+# Synthetic Container Runtime

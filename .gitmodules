@@ -1,0 +1,6 @@
+[submodule "proto/github.com/gogo/protobuf"]
+	path = proto/github.com/gogo/protobuf
+	url = https://github.com/gogo/protobuf
+[submodule "proto/k8s.io/cri-api"]
+	path = proto/k8s.io/cri-api
+	url = https://github.com/kubernetes/cri-api.git
