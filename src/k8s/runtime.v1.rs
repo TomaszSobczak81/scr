@@ -2551,145 +2551,27 @@ impl CgroupDriver {
         }
     }
 }
-/// Generated client implementations.
-pub mod runtime_service_client {
+/// Generated server implementations.
+pub mod runtime_service_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// Runtime service defines the public APIs for remote container runtimes
-    #[derive(Debug, Clone)]
-    pub struct RuntimeServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
-    }
-    impl RuntimeServiceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> RuntimeServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
-        pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
-        }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
-        }
-        pub fn with_interceptor<F>(
-            inner: T,
-            interceptor: F,
-        ) -> RuntimeServiceClient<InterceptedService<T, F>>
-        where
-            F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
-        {
-            RuntimeServiceClient::new(InterceptedService::new(inner, interceptor))
-        }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
-        #[must_use]
-        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
-            self
-        }
-        /// Limits the maximum size of a decoded message.
-        ///
-        /// Default: `4MB`
-        #[must_use]
-        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
-            self
-        }
-        /// Limits the maximum size of an encoded message.
-        ///
-        /// Default: `usize::MAX`
-        #[must_use]
-        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
-            self
-        }
+    /// Generated trait containing gRPC methods that should be implemented for use with RuntimeServiceServer.
+    #[async_trait]
+    pub trait RuntimeService: Send + Sync + 'static {
         /// Version returns the runtime name, runtime version, and runtime API version.
-        pub async fn version(
-            &mut self,
-            request: impl tonic::IntoRequest<super::VersionRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::VersionResponse>,
-            tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/Version",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "Version"));
-            self.inner.unary(req, path, codec).await
-        }
+        async fn version(
+            &self,
+            request: tonic::Request<super::VersionRequest>,
+        ) -> std::result::Result<tonic::Response<super::VersionResponse>, tonic::Status>;
         /// RunPodSandbox creates and starts a pod-level sandbox. Runtimes must ensure
         /// the sandbox is in the ready state on success.
-        pub async fn run_pod_sandbox(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RunPodSandboxRequest>,
+        async fn run_pod_sandbox(
+            &self,
+            request: tonic::Request<super::RunPodSandboxRequest>,
         ) -> std::result::Result<
             tonic::Response<super::RunPodSandboxResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/RunPodSandbox",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "RunPodSandbox"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// StopPodSandbox stops any running process that is part of the sandbox and
         /// reclaims network resources (e.g., IP addresses) allocated to the sandbox.
         /// If there are any running containers in the sandbox, they must be forcibly
@@ -2699,720 +2581,233 @@ pub mod runtime_service_client {
         /// at least once before calling RemovePodSandbox. It will also attempt to
         /// reclaim resources eagerly, as soon as a sandbox is not needed. Hence,
         /// multiple StopPodSandbox calls are expected.
-        pub async fn stop_pod_sandbox(
-            &mut self,
-            request: impl tonic::IntoRequest<super::StopPodSandboxRequest>,
+        async fn stop_pod_sandbox(
+            &self,
+            request: tonic::Request<super::StopPodSandboxRequest>,
         ) -> std::result::Result<
             tonic::Response<super::StopPodSandboxResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/StopPodSandbox",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "StopPodSandbox"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// RemovePodSandbox removes the sandbox. If there are any running containers
         /// in the sandbox, they must be forcibly terminated and removed.
         /// This call is idempotent, and must not return an error if the sandbox has
         /// already been removed.
-        pub async fn remove_pod_sandbox(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RemovePodSandboxRequest>,
+        async fn remove_pod_sandbox(
+            &self,
+            request: tonic::Request<super::RemovePodSandboxRequest>,
         ) -> std::result::Result<
             tonic::Response<super::RemovePodSandboxResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/RemovePodSandbox",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "RemovePodSandbox"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// PodSandboxStatus returns the status of the PodSandbox. If the PodSandbox is not
         /// present, returns an error.
-        pub async fn pod_sandbox_status(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PodSandboxStatusRequest>,
+        async fn pod_sandbox_status(
+            &self,
+            request: tonic::Request<super::PodSandboxStatusRequest>,
         ) -> std::result::Result<
             tonic::Response<super::PodSandboxStatusResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/PodSandboxStatus",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "PodSandboxStatus"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ListPodSandbox returns a list of PodSandboxes.
-        pub async fn list_pod_sandbox(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPodSandboxRequest>,
+        async fn list_pod_sandbox(
+            &self,
+            request: tonic::Request<super::ListPodSandboxRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListPodSandboxResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ListPodSandbox",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "ListPodSandbox"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// CreateContainer creates a new container in specified PodSandbox
-        pub async fn create_container(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CreateContainerRequest>,
+        async fn create_container(
+            &self,
+            request: tonic::Request<super::CreateContainerRequest>,
         ) -> std::result::Result<
             tonic::Response<super::CreateContainerResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/CreateContainer",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "CreateContainer"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// StartContainer starts the container.
-        pub async fn start_container(
-            &mut self,
-            request: impl tonic::IntoRequest<super::StartContainerRequest>,
+        async fn start_container(
+            &self,
+            request: tonic::Request<super::StartContainerRequest>,
         ) -> std::result::Result<
             tonic::Response<super::StartContainerResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/StartContainer",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "StartContainer"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// StopContainer stops a running container with a grace period (i.e., timeout).
         /// This call is idempotent, and must not return an error if the container has
         /// already been stopped.
         /// The runtime must forcibly kill the container after the grace period is
         /// reached.
-        pub async fn stop_container(
-            &mut self,
-            request: impl tonic::IntoRequest<super::StopContainerRequest>,
+        async fn stop_container(
+            &self,
+            request: tonic::Request<super::StopContainerRequest>,
         ) -> std::result::Result<
             tonic::Response<super::StopContainerResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/StopContainer",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "StopContainer"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// RemoveContainer removes the container. If the container is running, the
         /// container must be forcibly removed.
         /// This call is idempotent, and must not return an error if the container has
         /// already been removed.
-        pub async fn remove_container(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RemoveContainerRequest>,
+        async fn remove_container(
+            &self,
+            request: tonic::Request<super::RemoveContainerRequest>,
         ) -> std::result::Result<
             tonic::Response<super::RemoveContainerResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/RemoveContainer",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "RemoveContainer"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ListContainers lists all containers by filters.
-        pub async fn list_containers(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListContainersRequest>,
+        async fn list_containers(
+            &self,
+            request: tonic::Request<super::ListContainersRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListContainersResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ListContainers",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "ListContainers"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ContainerStatus returns status of the container. If the container is not
         /// present, returns an error.
-        pub async fn container_status(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ContainerStatusRequest>,
+        async fn container_status(
+            &self,
+            request: tonic::Request<super::ContainerStatusRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ContainerStatusResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ContainerStatus",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "ContainerStatus"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// UpdateContainerResources updates ContainerConfig of the container synchronously.
         /// If runtime fails to transactionally update the requested resources, an error is returned.
-        pub async fn update_container_resources(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateContainerResourcesRequest>,
+        async fn update_container_resources(
+            &self,
+            request: tonic::Request<super::UpdateContainerResourcesRequest>,
         ) -> std::result::Result<
             tonic::Response<super::UpdateContainerResourcesResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/UpdateContainerResources",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new(
-                        "runtime.v1.RuntimeService",
-                        "UpdateContainerResources",
-                    ),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ReopenContainerLog asks runtime to reopen the stdout/stderr log file
         /// for the container. This is often called after the log file has been
         /// rotated. If the container is not running, container runtime can choose
         /// to either create a new log file and return nil, or return an error.
         /// Once it returns error, new container log file MUST NOT be created.
-        pub async fn reopen_container_log(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ReopenContainerLogRequest>,
+        async fn reopen_container_log(
+            &self,
+            request: tonic::Request<super::ReopenContainerLogRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ReopenContainerLogResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ReopenContainerLog",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "ReopenContainerLog"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ExecSync runs a command in a container synchronously.
-        pub async fn exec_sync(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ExecSyncRequest>,
+        async fn exec_sync(
+            &self,
+            request: tonic::Request<super::ExecSyncRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ExecSyncResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ExecSync",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "ExecSync"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// Exec prepares a streaming endpoint to execute a command in the container.
-        pub async fn exec(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ExecRequest>,
-        ) -> std::result::Result<tonic::Response<super::ExecResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/Exec",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "Exec"));
-            self.inner.unary(req, path, codec).await
-        }
+        async fn exec(
+            &self,
+            request: tonic::Request<super::ExecRequest>,
+        ) -> std::result::Result<tonic::Response<super::ExecResponse>, tonic::Status>;
         /// Attach prepares a streaming endpoint to attach to a running container.
-        pub async fn attach(
-            &mut self,
-            request: impl tonic::IntoRequest<super::AttachRequest>,
-        ) -> std::result::Result<tonic::Response<super::AttachResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/Attach",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "Attach"));
-            self.inner.unary(req, path, codec).await
-        }
+        async fn attach(
+            &self,
+            request: tonic::Request<super::AttachRequest>,
+        ) -> std::result::Result<tonic::Response<super::AttachResponse>, tonic::Status>;
         /// PortForward prepares a streaming endpoint to forward ports from a PodSandbox.
-        pub async fn port_forward(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PortForwardRequest>,
+        async fn port_forward(
+            &self,
+            request: tonic::Request<super::PortForwardRequest>,
         ) -> std::result::Result<
             tonic::Response<super::PortForwardResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/PortForward",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "PortForward"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ContainerStats returns stats of the container. If the container does not
         /// exist, the call returns an error.
-        pub async fn container_stats(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ContainerStatsRequest>,
+        async fn container_stats(
+            &self,
+            request: tonic::Request<super::ContainerStatsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ContainerStatsResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ContainerStats",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "ContainerStats"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ListContainerStats returns stats of all running containers.
-        pub async fn list_container_stats(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListContainerStatsRequest>,
+        async fn list_container_stats(
+            &self,
+            request: tonic::Request<super::ListContainerStatsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListContainerStatsResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ListContainerStats",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "ListContainerStats"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// PodSandboxStats returns stats of the pod sandbox. If the pod sandbox does not
         /// exist, the call returns an error.
-        pub async fn pod_sandbox_stats(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PodSandboxStatsRequest>,
+        async fn pod_sandbox_stats(
+            &self,
+            request: tonic::Request<super::PodSandboxStatsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::PodSandboxStatsResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/PodSandboxStats",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "PodSandboxStats"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ListPodSandboxStats returns stats of the pod sandboxes matching a filter.
-        pub async fn list_pod_sandbox_stats(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPodSandboxStatsRequest>,
+        async fn list_pod_sandbox_stats(
+            &self,
+            request: tonic::Request<super::ListPodSandboxStatsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListPodSandboxStatsResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ListPodSandboxStats",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "ListPodSandboxStats"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// UpdateRuntimeConfig updates the runtime configuration based on the given request.
-        pub async fn update_runtime_config(
-            &mut self,
-            request: impl tonic::IntoRequest<super::UpdateRuntimeConfigRequest>,
+        async fn update_runtime_config(
+            &self,
+            request: tonic::Request<super::UpdateRuntimeConfigRequest>,
         ) -> std::result::Result<
             tonic::Response<super::UpdateRuntimeConfigResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/UpdateRuntimeConfig",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "UpdateRuntimeConfig"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// Status returns the status of the runtime.
-        pub async fn status(
-            &mut self,
-            request: impl tonic::IntoRequest<super::StatusRequest>,
-        ) -> std::result::Result<tonic::Response<super::StatusResponse>, tonic::Status> {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/Status",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "Status"));
-            self.inner.unary(req, path, codec).await
-        }
+        async fn status(
+            &self,
+            request: tonic::Request<super::StatusRequest>,
+        ) -> std::result::Result<tonic::Response<super::StatusResponse>, tonic::Status>;
         /// CheckpointContainer checkpoints a container
-        pub async fn checkpoint_container(
-            &mut self,
-            request: impl tonic::IntoRequest<super::CheckpointContainerRequest>,
+        async fn checkpoint_container(
+            &self,
+            request: tonic::Request<super::CheckpointContainerRequest>,
         ) -> std::result::Result<
             tonic::Response<super::CheckpointContainerResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/CheckpointContainer",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "CheckpointContainer"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
+        /// Server streaming response type for the GetContainerEvents method.
+        type GetContainerEventsStream: tonic::codegen::tokio_stream::Stream<
+                Item = std::result::Result<super::ContainerEventResponse, tonic::Status>,
+            >
+            + Send
+            + 'static;
         /// GetContainerEvents gets container events from the CRI runtime
-        pub async fn get_container_events(
-            &mut self,
-            request: impl tonic::IntoRequest<super::GetEventsRequest>,
+        async fn get_container_events(
+            &self,
+            request: tonic::Request<super::GetEventsRequest>,
         ) -> std::result::Result<
-            tonic::Response<tonic::codec::Streaming<super::ContainerEventResponse>>,
+            tonic::Response<Self::GetContainerEventsStream>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/GetContainerEvents",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "GetContainerEvents"),
-                );
-            self.inner.server_streaming(req, path, codec).await
-        }
+        >;
         /// ListMetricDescriptors gets the descriptors for the metrics that will be returned in ListPodSandboxMetrics.
         /// This list should be static at startup: either the client and server restart together when
         /// adding or removing metrics descriptors, or they should not change.
         /// Put differently, if ListPodSandboxMetrics references a name that is not described in the initial
         /// ListMetricDescriptors call, then the metric will not be broadcasted.
-        pub async fn list_metric_descriptors(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListMetricDescriptorsRequest>,
+        async fn list_metric_descriptors(
+            &self,
+            request: tonic::Request<super::ListMetricDescriptorsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListMetricDescriptorsResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ListMetricDescriptors",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "ListMetricDescriptors"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ListPodSandboxMetrics gets pod sandbox metrics from CRI Runtime
-        pub async fn list_pod_sandbox_metrics(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ListPodSandboxMetricsRequest>,
+        async fn list_pod_sandbox_metrics(
+            &self,
+            request: tonic::Request<super::ListPodSandboxMetricsRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListPodSandboxMetricsResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/ListPodSandboxMetrics",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(
-                    GrpcMethod::new("runtime.v1.RuntimeService", "ListPodSandboxMetrics"),
-                );
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// RuntimeConfig returns configuration information of the runtime.
         /// A couple of notes:
         /// - The RuntimeConfigRequest object is not to be confused with the contents of UpdateRuntimeConfigRequest.
@@ -3420,101 +2815,57 @@ pub mod runtime_service_client {
         /// - It is the expectation of the Kubelet that these fields are static for the lifecycle of the Kubelet.
         ///   The Kubelet will not re-request the RuntimeConfiguration after startup, and CRI implementations should
         ///   avoid updating them without a full node reboot.
-        pub async fn runtime_config(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RuntimeConfigRequest>,
+        async fn runtime_config(
+            &self,
+            request: tonic::Request<super::RuntimeConfigRequest>,
         ) -> std::result::Result<
             tonic::Response<super::RuntimeConfigResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.RuntimeService/RuntimeConfig",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.RuntimeService", "RuntimeConfig"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
     }
-}
-/// Generated client implementations.
-pub mod image_service_client {
-    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
-    use tonic::codegen::*;
-    use tonic::codegen::http::Uri;
-    /// ImageService defines the public APIs for managing images.
-    #[derive(Debug, Clone)]
-    pub struct ImageServiceClient<T> {
-        inner: tonic::client::Grpc<T>,
+    /// Runtime service defines the public APIs for remote container runtimes
+    #[derive(Debug)]
+    pub struct RuntimeServiceServer<T: RuntimeService> {
+        inner: _Inner<T>,
+        accept_compression_encodings: EnabledCompressionEncodings,
+        send_compression_encodings: EnabledCompressionEncodings,
+        max_decoding_message_size: Option<usize>,
+        max_encoding_message_size: Option<usize>,
     }
-    impl ImageServiceClient<tonic::transport::Channel> {
-        /// Attempt to create a new client by connecting to a given endpoint.
-        pub async fn connect<D>(dst: D) -> Result<Self, tonic::transport::Error>
-        where
-            D: TryInto<tonic::transport::Endpoint>,
-            D::Error: Into<StdError>,
-        {
-            let conn = tonic::transport::Endpoint::new(dst)?.connect().await?;
-            Ok(Self::new(conn))
-        }
-    }
-    impl<T> ImageServiceClient<T>
-    where
-        T: tonic::client::GrpcService<tonic::body::BoxBody>,
-        T::Error: Into<StdError>,
-        T::ResponseBody: Body<Data = Bytes> + Send + 'static,
-        <T::ResponseBody as Body>::Error: Into<StdError> + Send,
-    {
+    struct _Inner<T>(Arc<T>);
+    impl<T: RuntimeService> RuntimeServiceServer<T> {
         pub fn new(inner: T) -> Self {
-            let inner = tonic::client::Grpc::new(inner);
-            Self { inner }
+            Self::from_arc(Arc::new(inner))
         }
-        pub fn with_origin(inner: T, origin: Uri) -> Self {
-            let inner = tonic::client::Grpc::with_origin(inner, origin);
-            Self { inner }
+        pub fn from_arc(inner: Arc<T>) -> Self {
+            let inner = _Inner(inner);
+            Self {
+                inner,
+                accept_compression_encodings: Default::default(),
+                send_compression_encodings: Default::default(),
+                max_decoding_message_size: None,
+                max_encoding_message_size: None,
+            }
         }
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> ImageServiceClient<InterceptedService<T, F>>
+        ) -> InterceptedService<Self, F>
         where
             F: tonic::service::Interceptor,
-            T::ResponseBody: Default,
-            T: tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-                Response = http::Response<
-                    <T as tonic::client::GrpcService<tonic::body::BoxBody>>::ResponseBody,
-                >,
-            >,
-            <T as tonic::codegen::Service<
-                http::Request<tonic::body::BoxBody>,
-            >>::Error: Into<StdError> + Send + Sync,
         {
-            ImageServiceClient::new(InterceptedService::new(inner, interceptor))
+            InterceptedService::new(Self::new(inner), interceptor)
         }
-        /// Compress requests with the given encoding.
-        ///
-        /// This requires the server to support it otherwise it might respond with an
-        /// error.
-        #[must_use]
-        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.send_compressed(encoding);
-            self
-        }
-        /// Enable decompressing responses.
+        /// Enable decompressing requests with the given encoding.
         #[must_use]
         pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
-            self.inner = self.inner.accept_compressed(encoding);
+            self.accept_compression_encodings.enable(encoding);
+            self
+        }
+        /// Compress responses with the given encoding, if the client supports it.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.send_compression_encodings.enable(encoding);
             self
         }
         /// Limits the maximum size of a decoded message.
@@ -3522,7 +2873,7 @@ pub mod image_service_client {
         /// Default: `4MB`
         #[must_use]
         pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_decoding_message_size(limit);
+            self.max_decoding_message_size = Some(limit);
             self
         }
         /// Limits the maximum size of an encoded message.
@@ -3530,142 +2881,1841 @@ pub mod image_service_client {
         /// Default: `usize::MAX`
         #[must_use]
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
-            self.inner = self.inner.max_encoding_message_size(limit);
+            self.max_encoding_message_size = Some(limit);
             self
         }
-        /// ListImages lists existing images.
-        pub async fn list_images(
+    }
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for RuntimeServiceServer<T>
+    where
+        T: RuntimeService,
+        B: Body + Send + 'static,
+        B::Error: Into<StdError> + Send + 'static,
+    {
+        type Response = http::Response<tonic::body::BoxBody>;
+        type Error = std::convert::Infallible;
+        type Future = BoxFuture<Self::Response, Self::Error>;
+        fn poll_ready(
             &mut self,
-            request: impl tonic::IntoRequest<super::ListImagesRequest>,
+            _cx: &mut Context<'_>,
+        ) -> Poll<std::result::Result<(), Self::Error>> {
+            Poll::Ready(Ok(()))
+        }
+        fn call(&mut self, req: http::Request<B>) -> Self::Future {
+            let inner = self.inner.clone();
+            match req.uri().path() {
+                "/runtime.v1.RuntimeService/Version" => {
+                    #[allow(non_camel_case_types)]
+                    struct VersionSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::VersionRequest>
+                    for VersionSvc<T> {
+                        type Response = super::VersionResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::VersionRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::version(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = VersionSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/RunPodSandbox" => {
+                    #[allow(non_camel_case_types)]
+                    struct RunPodSandboxSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::RunPodSandboxRequest>
+                    for RunPodSandboxSvc<T> {
+                        type Response = super::RunPodSandboxResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RunPodSandboxRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::run_pod_sandbox(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = RunPodSandboxSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/StopPodSandbox" => {
+                    #[allow(non_camel_case_types)]
+                    struct StopPodSandboxSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::StopPodSandboxRequest>
+                    for StopPodSandboxSvc<T> {
+                        type Response = super::StopPodSandboxResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::StopPodSandboxRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::stop_pod_sandbox(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = StopPodSandboxSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/RemovePodSandbox" => {
+                    #[allow(non_camel_case_types)]
+                    struct RemovePodSandboxSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::RemovePodSandboxRequest>
+                    for RemovePodSandboxSvc<T> {
+                        type Response = super::RemovePodSandboxResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RemovePodSandboxRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::remove_pod_sandbox(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = RemovePodSandboxSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/PodSandboxStatus" => {
+                    #[allow(non_camel_case_types)]
+                    struct PodSandboxStatusSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::PodSandboxStatusRequest>
+                    for PodSandboxStatusSvc<T> {
+                        type Response = super::PodSandboxStatusResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::PodSandboxStatusRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::pod_sandbox_status(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = PodSandboxStatusSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ListPodSandbox" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListPodSandboxSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ListPodSandboxRequest>
+                    for ListPodSandboxSvc<T> {
+                        type Response = super::ListPodSandboxResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListPodSandboxRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::list_pod_sandbox(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListPodSandboxSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/CreateContainer" => {
+                    #[allow(non_camel_case_types)]
+                    struct CreateContainerSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::CreateContainerRequest>
+                    for CreateContainerSvc<T> {
+                        type Response = super::CreateContainerResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::CreateContainerRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::create_container(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = CreateContainerSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/StartContainer" => {
+                    #[allow(non_camel_case_types)]
+                    struct StartContainerSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::StartContainerRequest>
+                    for StartContainerSvc<T> {
+                        type Response = super::StartContainerResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::StartContainerRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::start_container(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = StartContainerSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/StopContainer" => {
+                    #[allow(non_camel_case_types)]
+                    struct StopContainerSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::StopContainerRequest>
+                    for StopContainerSvc<T> {
+                        type Response = super::StopContainerResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::StopContainerRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::stop_container(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = StopContainerSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/RemoveContainer" => {
+                    #[allow(non_camel_case_types)]
+                    struct RemoveContainerSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::RemoveContainerRequest>
+                    for RemoveContainerSvc<T> {
+                        type Response = super::RemoveContainerResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RemoveContainerRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::remove_container(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = RemoveContainerSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ListContainers" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListContainersSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ListContainersRequest>
+                    for ListContainersSvc<T> {
+                        type Response = super::ListContainersResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListContainersRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::list_containers(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListContainersSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ContainerStatus" => {
+                    #[allow(non_camel_case_types)]
+                    struct ContainerStatusSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ContainerStatusRequest>
+                    for ContainerStatusSvc<T> {
+                        type Response = super::ContainerStatusResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ContainerStatusRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::container_status(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ContainerStatusSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/UpdateContainerResources" => {
+                    #[allow(non_camel_case_types)]
+                    struct UpdateContainerResourcesSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::UpdateContainerResourcesRequest>
+                    for UpdateContainerResourcesSvc<T> {
+                        type Response = super::UpdateContainerResourcesResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                super::UpdateContainerResourcesRequest,
+                            >,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::update_container_resources(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = UpdateContainerResourcesSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ReopenContainerLog" => {
+                    #[allow(non_camel_case_types)]
+                    struct ReopenContainerLogSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ReopenContainerLogRequest>
+                    for ReopenContainerLogSvc<T> {
+                        type Response = super::ReopenContainerLogResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ReopenContainerLogRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::reopen_container_log(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ReopenContainerLogSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ExecSync" => {
+                    #[allow(non_camel_case_types)]
+                    struct ExecSyncSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ExecSyncRequest>
+                    for ExecSyncSvc<T> {
+                        type Response = super::ExecSyncResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ExecSyncRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::exec_sync(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ExecSyncSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/Exec" => {
+                    #[allow(non_camel_case_types)]
+                    struct ExecSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ExecRequest> for ExecSvc<T> {
+                        type Response = super::ExecResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ExecRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::exec(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ExecSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/Attach" => {
+                    #[allow(non_camel_case_types)]
+                    struct AttachSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::AttachRequest>
+                    for AttachSvc<T> {
+                        type Response = super::AttachResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::AttachRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::attach(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = AttachSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/PortForward" => {
+                    #[allow(non_camel_case_types)]
+                    struct PortForwardSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::PortForwardRequest>
+                    for PortForwardSvc<T> {
+                        type Response = super::PortForwardResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::PortForwardRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::port_forward(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = PortForwardSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ContainerStats" => {
+                    #[allow(non_camel_case_types)]
+                    struct ContainerStatsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ContainerStatsRequest>
+                    for ContainerStatsSvc<T> {
+                        type Response = super::ContainerStatsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ContainerStatsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::container_stats(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ContainerStatsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ListContainerStats" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListContainerStatsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ListContainerStatsRequest>
+                    for ListContainerStatsSvc<T> {
+                        type Response = super::ListContainerStatsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListContainerStatsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::list_container_stats(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListContainerStatsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/PodSandboxStats" => {
+                    #[allow(non_camel_case_types)]
+                    struct PodSandboxStatsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::PodSandboxStatsRequest>
+                    for PodSandboxStatsSvc<T> {
+                        type Response = super::PodSandboxStatsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::PodSandboxStatsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::pod_sandbox_stats(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = PodSandboxStatsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ListPodSandboxStats" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListPodSandboxStatsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ListPodSandboxStatsRequest>
+                    for ListPodSandboxStatsSvc<T> {
+                        type Response = super::ListPodSandboxStatsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListPodSandboxStatsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::list_pod_sandbox_stats(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListPodSandboxStatsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/UpdateRuntimeConfig" => {
+                    #[allow(non_camel_case_types)]
+                    struct UpdateRuntimeConfigSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::UpdateRuntimeConfigRequest>
+                    for UpdateRuntimeConfigSvc<T> {
+                        type Response = super::UpdateRuntimeConfigResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::UpdateRuntimeConfigRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::update_runtime_config(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = UpdateRuntimeConfigSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/Status" => {
+                    #[allow(non_camel_case_types)]
+                    struct StatusSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::StatusRequest>
+                    for StatusSvc<T> {
+                        type Response = super::StatusResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::StatusRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::status(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = StatusSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/CheckpointContainer" => {
+                    #[allow(non_camel_case_types)]
+                    struct CheckpointContainerSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::CheckpointContainerRequest>
+                    for CheckpointContainerSvc<T> {
+                        type Response = super::CheckpointContainerResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::CheckpointContainerRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::checkpoint_container(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = CheckpointContainerSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/GetContainerEvents" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetContainerEventsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::ServerStreamingService<super::GetEventsRequest>
+                    for GetContainerEventsSvc<T> {
+                        type Response = super::ContainerEventResponse;
+                        type ResponseStream = T::GetContainerEventsStream;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::ResponseStream>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetEventsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::get_container_events(&inner, request)
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = GetContainerEventsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.server_streaming(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ListMetricDescriptors" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListMetricDescriptorsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ListMetricDescriptorsRequest>
+                    for ListMetricDescriptorsSvc<T> {
+                        type Response = super::ListMetricDescriptorsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListMetricDescriptorsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::list_metric_descriptors(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListMetricDescriptorsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/ListPodSandboxMetrics" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListPodSandboxMetricsSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::ListPodSandboxMetricsRequest>
+                    for ListPodSandboxMetricsSvc<T> {
+                        type Response = super::ListPodSandboxMetricsResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListPodSandboxMetricsRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::list_pod_sandbox_metrics(
+                                        &inner,
+                                        request,
+                                    )
+                                    .await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListPodSandboxMetricsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.RuntimeService/RuntimeConfig" => {
+                    #[allow(non_camel_case_types)]
+                    struct RuntimeConfigSvc<T: RuntimeService>(pub Arc<T>);
+                    impl<
+                        T: RuntimeService,
+                    > tonic::server::UnaryService<super::RuntimeConfigRequest>
+                    for RuntimeConfigSvc<T> {
+                        type Response = super::RuntimeConfigResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RuntimeConfigRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as RuntimeService>::runtime_config(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = RuntimeConfigSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                _ => {
+                    Box::pin(async move {
+                        Ok(
+                            http::Response::builder()
+                                .status(200)
+                                .header("grpc-status", "12")
+                                .header("content-type", "application/grpc")
+                                .body(empty_body())
+                                .unwrap(),
+                        )
+                    })
+                }
+            }
+        }
+    }
+    impl<T: RuntimeService> Clone for RuntimeServiceServer<T> {
+        fn clone(&self) -> Self {
+            let inner = self.inner.clone();
+            Self {
+                inner,
+                accept_compression_encodings: self.accept_compression_encodings,
+                send_compression_encodings: self.send_compression_encodings,
+                max_decoding_message_size: self.max_decoding_message_size,
+                max_encoding_message_size: self.max_encoding_message_size,
+            }
+        }
+    }
+    impl<T: RuntimeService> Clone for _Inner<T> {
+        fn clone(&self) -> Self {
+            Self(Arc::clone(&self.0))
+        }
+    }
+    impl<T: std::fmt::Debug> std::fmt::Debug for _Inner<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{:?}", self.0)
+        }
+    }
+    impl<T: RuntimeService> tonic::server::NamedService for RuntimeServiceServer<T> {
+        const NAME: &'static str = "runtime.v1.RuntimeService";
+    }
+}
+/// Generated server implementations.
+pub mod image_service_server {
+    #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
+    use tonic::codegen::*;
+    /// Generated trait containing gRPC methods that should be implemented for use with ImageServiceServer.
+    #[async_trait]
+    pub trait ImageService: Send + Sync + 'static {
+        /// ListImages lists existing images.
+        async fn list_images(
+            &self,
+            request: tonic::Request<super::ListImagesRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ListImagesResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.ImageService/ListImages",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.ImageService", "ListImages"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ImageStatus returns the status of the image. If the image is not
         /// present, returns a response with ImageStatusResponse.Image set to
         /// nil.
-        pub async fn image_status(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImageStatusRequest>,
+        async fn image_status(
+            &self,
+            request: tonic::Request<super::ImageStatusRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ImageStatusResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.ImageService/ImageStatus",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.ImageService", "ImageStatus"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// PullImage pulls an image with authentication config.
-        pub async fn pull_image(
-            &mut self,
-            request: impl tonic::IntoRequest<super::PullImageRequest>,
+        async fn pull_image(
+            &self,
+            request: tonic::Request<super::PullImageRequest>,
         ) -> std::result::Result<
             tonic::Response<super::PullImageResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.ImageService/PullImage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.ImageService", "PullImage"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// RemoveImage removes the image.
         /// This call is idempotent, and must not return an error if the image has
         /// already been removed.
-        pub async fn remove_image(
-            &mut self,
-            request: impl tonic::IntoRequest<super::RemoveImageRequest>,
+        async fn remove_image(
+            &self,
+            request: tonic::Request<super::RemoveImageRequest>,
         ) -> std::result::Result<
             tonic::Response<super::RemoveImageResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.ImageService/RemoveImage",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.ImageService", "RemoveImage"));
-            self.inner.unary(req, path, codec).await
-        }
+        >;
         /// ImageFSInfo returns information of the filesystem that is used to store images.
-        pub async fn image_fs_info(
-            &mut self,
-            request: impl tonic::IntoRequest<super::ImageFsInfoRequest>,
+        async fn image_fs_info(
+            &self,
+            request: tonic::Request<super::ImageFsInfoRequest>,
         ) -> std::result::Result<
             tonic::Response<super::ImageFsInfoResponse>,
             tonic::Status,
-        > {
-            self.inner
-                .ready()
-                .await
-                .map_err(|e| {
-                    tonic::Status::new(
-                        tonic::Code::Unknown,
-                        format!("Service was not ready: {}", e.into()),
-                    )
-                })?;
-            let codec = tonic::codec::ProstCodec::default();
-            let path = http::uri::PathAndQuery::from_static(
-                "/runtime.v1.ImageService/ImageFsInfo",
-            );
-            let mut req = request.into_request();
-            req.extensions_mut()
-                .insert(GrpcMethod::new("runtime.v1.ImageService", "ImageFsInfo"));
-            self.inner.unary(req, path, codec).await
+        >;
+    }
+    /// ImageService defines the public APIs for managing images.
+    #[derive(Debug)]
+    pub struct ImageServiceServer<T: ImageService> {
+        inner: _Inner<T>,
+        accept_compression_encodings: EnabledCompressionEncodings,
+        send_compression_encodings: EnabledCompressionEncodings,
+        max_decoding_message_size: Option<usize>,
+        max_encoding_message_size: Option<usize>,
+    }
+    struct _Inner<T>(Arc<T>);
+    impl<T: ImageService> ImageServiceServer<T> {
+        pub fn new(inner: T) -> Self {
+            Self::from_arc(Arc::new(inner))
         }
+        pub fn from_arc(inner: Arc<T>) -> Self {
+            let inner = _Inner(inner);
+            Self {
+                inner,
+                accept_compression_encodings: Default::default(),
+                send_compression_encodings: Default::default(),
+                max_decoding_message_size: None,
+                max_encoding_message_size: None,
+            }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> InterceptedService<Self, F>
+        where
+            F: tonic::service::Interceptor,
+        {
+            InterceptedService::new(Self::new(inner), interceptor)
+        }
+        /// Enable decompressing requests with the given encoding.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.accept_compression_encodings.enable(encoding);
+            self
+        }
+        /// Compress responses with the given encoding, if the client supports it.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.send_compression_encodings.enable(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.max_decoding_message_size = Some(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.max_encoding_message_size = Some(limit);
+            self
+        }
+    }
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for ImageServiceServer<T>
+    where
+        T: ImageService,
+        B: Body + Send + 'static,
+        B::Error: Into<StdError> + Send + 'static,
+    {
+        type Response = http::Response<tonic::body::BoxBody>;
+        type Error = std::convert::Infallible;
+        type Future = BoxFuture<Self::Response, Self::Error>;
+        fn poll_ready(
+            &mut self,
+            _cx: &mut Context<'_>,
+        ) -> Poll<std::result::Result<(), Self::Error>> {
+            Poll::Ready(Ok(()))
+        }
+        fn call(&mut self, req: http::Request<B>) -> Self::Future {
+            let inner = self.inner.clone();
+            match req.uri().path() {
+                "/runtime.v1.ImageService/ListImages" => {
+                    #[allow(non_camel_case_types)]
+                    struct ListImagesSvc<T: ImageService>(pub Arc<T>);
+                    impl<
+                        T: ImageService,
+                    > tonic::server::UnaryService<super::ListImagesRequest>
+                    for ListImagesSvc<T> {
+                        type Response = super::ListImagesResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ListImagesRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ImageService>::list_images(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ListImagesSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.ImageService/ImageStatus" => {
+                    #[allow(non_camel_case_types)]
+                    struct ImageStatusSvc<T: ImageService>(pub Arc<T>);
+                    impl<
+                        T: ImageService,
+                    > tonic::server::UnaryService<super::ImageStatusRequest>
+                    for ImageStatusSvc<T> {
+                        type Response = super::ImageStatusResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ImageStatusRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ImageService>::image_status(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ImageStatusSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.ImageService/PullImage" => {
+                    #[allow(non_camel_case_types)]
+                    struct PullImageSvc<T: ImageService>(pub Arc<T>);
+                    impl<
+                        T: ImageService,
+                    > tonic::server::UnaryService<super::PullImageRequest>
+                    for PullImageSvc<T> {
+                        type Response = super::PullImageResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::PullImageRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ImageService>::pull_image(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = PullImageSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.ImageService/RemoveImage" => {
+                    #[allow(non_camel_case_types)]
+                    struct RemoveImageSvc<T: ImageService>(pub Arc<T>);
+                    impl<
+                        T: ImageService,
+                    > tonic::server::UnaryService<super::RemoveImageRequest>
+                    for RemoveImageSvc<T> {
+                        type Response = super::RemoveImageResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::RemoveImageRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ImageService>::remove_image(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = RemoveImageSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/runtime.v1.ImageService/ImageFsInfo" => {
+                    #[allow(non_camel_case_types)]
+                    struct ImageFsInfoSvc<T: ImageService>(pub Arc<T>);
+                    impl<
+                        T: ImageService,
+                    > tonic::server::UnaryService<super::ImageFsInfoRequest>
+                    for ImageFsInfoSvc<T> {
+                        type Response = super::ImageFsInfoResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::ImageFsInfoRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut = async move {
+                                <T as ImageService>::image_fs_info(&inner, request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ImageFsInfoSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                _ => {
+                    Box::pin(async move {
+                        Ok(
+                            http::Response::builder()
+                                .status(200)
+                                .header("grpc-status", "12")
+                                .header("content-type", "application/grpc")
+                                .body(empty_body())
+                                .unwrap(),
+                        )
+                    })
+                }
+            }
+        }
+    }
+    impl<T: ImageService> Clone for ImageServiceServer<T> {
+        fn clone(&self) -> Self {
+            let inner = self.inner.clone();
+            Self {
+                inner,
+                accept_compression_encodings: self.accept_compression_encodings,
+                send_compression_encodings: self.send_compression_encodings,
+                max_decoding_message_size: self.max_decoding_message_size,
+                max_encoding_message_size: self.max_encoding_message_size,
+            }
+        }
+    }
+    impl<T: ImageService> Clone for _Inner<T> {
+        fn clone(&self) -> Self {
+            Self(Arc::clone(&self.0))
+        }
+    }
+    impl<T: std::fmt::Debug> std::fmt::Debug for _Inner<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{:?}", self.0)
+        }
+    }
+    impl<T: ImageService> tonic::server::NamedService for ImageServiceServer<T> {
+        const NAME: &'static str = "runtime.v1.ImageService";
     }
 }
